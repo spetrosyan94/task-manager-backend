@@ -22,13 +22,14 @@ export class TasksService {
     task.status = status.CREATED;
     task.title = createTaskDto.title;
     task.author = author;
+    task.completedDate = createTaskDto.completedDate ?? null;
 
     await this.taskRepository.save(task);
     return task;
   }
 
   async getAll() {
-    return this.taskRepository.find();
+    return this.taskRepository.find({ relations: ['author', 'executor'] });
   }
 
   async getById(id: number) {
@@ -64,7 +65,7 @@ export class TasksService {
     // Проверка, что executor из dto наш подчиненный
     if (
       !this.executorAreEquals(updateDto.executor, task.executor) &&
-      updateDto.executor !== null
+      updateDto.executor
     ) {
       const executor = await this.userRepository.findOne({
         where: { id: Number(updateDto.executor) },
@@ -73,9 +74,6 @@ export class TasksService {
 
       if (executor.supervisor?.id !== user.id)
         return 'Нельзя назначить исполнителем задачи не вашего подчиненного';
-      // throw new BadRequestException(
-      //   'Вы не имеете прав назначать исполнителя',
-      // );
     }
     return true;
   }
@@ -97,15 +95,12 @@ export class TasksService {
       ? await this.userRepository.findOneByOrFail({ id: Number(dto.executor) })
       : null;
 
-    // Если задача выполнена, то обновляем дату выполнения в БД
-    if (dto.status === status.COMPLETED && dto.status !== task.status)
-      task.completedDate = new Date();
-
     task.description = dto.description;
     task.priority = dto.priority;
     task.status = dto.status;
     task.title = dto.title;
     task.executor = executor;
+    task.completedDate = dto.completedDate;
 
     this.taskRepository.save(task);
     return task;

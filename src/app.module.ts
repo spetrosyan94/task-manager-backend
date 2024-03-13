@@ -11,23 +11,24 @@ import { Task } from './tasks/task.entity';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: 'postgres',
+      type: 'mysql',
       host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'root',
-      database: 'todo',
+      port: 3306,
+      username: process.env.MYSQL_USERNAME || 'root',
+      password: process.env.MYSQL_PASSWORD || 'root',
+      database: 'task-manager',
       entities: [User, Task],
       synchronize: true,
 
       // // Автозагрузка сущностей зарегистрированных с помощью forFeature()
       // autoLoadEntities: true,
-      // synchronize: true,
-      // logging: true,
+      logging: true,
     }),
     TypeOrmModule.forFeature([User, Task]),
     UsersModule,

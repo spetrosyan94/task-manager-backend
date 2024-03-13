@@ -38,7 +38,7 @@ export class Task {
   @UpdateDateColumn()
   updatedDate: Date;
 
-  @Column({ nullable: true })
+  @Column({ type: 'date', nullable: true })
   completedDate: Date | null = null;
 
   @Column({
