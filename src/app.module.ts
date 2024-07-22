@@ -11,24 +11,27 @@ import { Task } from './tasks/task.entity';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: process.env.MYSQL_USERNAME || 'root',
-      password: process.env.MYSQL_PASSWORD || 'root',
-      database: 'task-manager',
-      entities: [User, Task],
-      synchronize: true,
-
-      // // Автозагрузка сущностей зарегистрированных с помощью forFeature()
-      // autoLoadEntities: true,
-      logging: true,
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get<string>('MYSQL_HOST', 'localhost'),
+        port: configService.get<number>('MYSQL_PORT', 3306),
+        username: configService.get<string>('MYSQL_USERNAME', 'root'),
+        password: configService.get<string>('MYSQL_PASSWORD', 'root'),
+        database: configService.get<string>('MYSQL_DATABASE', 'task-manager'),
+        // entities: [User, Task],
+        synchronize: true,
+        // // Автозагрузка сущностей зарегистрированных с помощью forFeature()
+        autoLoadEntities: true,
+        logging: true,
+      }),
     }),
     TypeOrmModule.forFeature([User, Task]),
     UsersModule,

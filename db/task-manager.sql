@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Хост: 127.0.0.1
--- Время создания: Мар 13 2024 г., 20:27
--- Версия сервера: 10.4.28-MariaDB
--- Версия PHP: 8.2.4
+-- Хост: db
+-- Время создания: Июл 24 2024 г., 18:58
+-- Версия сервера: 8.0.38
+-- Версия PHP: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,16 +28,16 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `task` (
-  `id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `createdDate` datetime(6) NOT NULL DEFAULT current_timestamp(6),
-  `updatedDate` datetime(6) NOT NULL DEFAULT current_timestamp(6) ON UPDATE current_timestamp(6),
+  `id` int NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `description` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `createdDate` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updatedDate` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `completedDate` date DEFAULT NULL,
-  `priority` enum('LOW','NORMAL','HIGH') NOT NULL DEFAULT 'NORMAL',
-  `status` enum('CREATED','PROGRESS','COMPLETED','CANCELLED') NOT NULL DEFAULT 'CREATED',
-  `authorId` int(11) DEFAULT NULL,
-  `executorId` int(11) DEFAULT NULL
+  `priority` enum('LOW','NORMAL','HIGH') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'NORMAL',
+  `status` enum('CREATED','PROGRESS','COMPLETED','CANCELLED') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'CREATED',
+  `authorId` int DEFAULT NULL,
+  `executorId` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -45,14 +45,14 @@ CREATE TABLE `task` (
 --
 
 INSERT INTO `task` (`id`, `title`, `description`, `createdDate`, `updatedDate`, `completedDate`, `priority`, `status`, `authorId`, `executorId`) VALUES
-(1, 'Починить дверь', 'Ну дверь', '2024-03-14 00:15:47.944865', '2024-03-14 00:26:11.000000', '2024-03-12', 'LOW', 'CREATED', 1, NULL),
-(2, 'Покорми гусей', 'га-га-га', '2024-03-14 00:16:14.956653', '2024-03-14 00:25:16.099111', '2024-03-23', 'NORMAL', 'PROGRESS', 1, 2),
-(3, 'Продать гараж', 'зачем тебе гараж?', '2024-03-14 00:16:58.430946', '2024-03-14 00:25:20.035017', '2024-03-19', 'HIGH', 'COMPLETED', 1, 2),
-(4, 'Танцевать до утра', 'В темноте', '2024-03-14 00:17:37.860494', '2024-03-14 00:25:23.472851', '2024-04-21', 'LOW', 'CANCELLED', 2, 3),
-(5, 'Стать айтишником', 'И есть красную икру', '2024-03-14 00:18:19.501593', '2024-03-14 00:25:26.826256', '2024-04-30', 'HIGH', 'PROGRESS', 2, 3),
-(6, 'Выпить кофею', 'Обед же', '2024-03-14 00:19:05.986683', '2024-03-14 00:27:06.000000', '2024-04-09', 'NORMAL', 'CREATED', 2, 2),
-(7, 'Стать суперменом', 'И никому не рассказать', '2024-03-14 00:22:39.843588', '2024-03-14 00:23:02.008257', '2024-05-10', 'HIGH', 'CREATED', 1, 1),
-(8, 'Ловить уточек', 'Кря', '2024-03-14 00:26:41.144210', '2024-03-14 00:27:01.000000', '2024-02-28', 'NORMAL', 'CREATED', 1, 2);
+(1, 'Починить дверь', 'Ну дверь', '2024-09-11 00:15:47.944865', '2024-07-24 18:56:12.750987', '2024-06-20', 'LOW', 'CREATED', 2, 6),
+(2, 'Покорми гусей', 'га-га-га', '2024-03-14 00:16:14.956653', '2024-07-24 18:55:04.390920', '2024-10-09', 'NORMAL', 'PROGRESS', 1, 2),
+(3, 'Продать гараж', 'зачем тебе гараж?', '2024-03-14 00:16:58.430946', '2024-07-24 18:55:12.360028', '2024-06-13', 'HIGH', 'COMPLETED', 2, 5),
+(4, 'Танцевать до утра', 'В темноте', '2024-03-14 00:17:37.860494', '2024-07-24 18:55:16.257742', '2024-05-15', 'LOW', 'CANCELLED', 2, 4),
+(5, 'Стать айтишником', 'И есть красную икру', '2024-03-14 00:18:19.501593', '2024-07-24 18:55:23.832927', '2024-09-28', 'HIGH', 'PROGRESS', 2, 3),
+(6, 'Выпить кофею', 'Обед же', '2024-03-14 00:19:05.986683', '2024-07-24 18:54:00.228446', '2024-04-09', 'NORMAL', 'CREATED', 2, 4),
+(7, 'Стать суперменом', 'И никому не рассказать', '2024-03-14 00:22:39.843588', '2024-07-24 18:55:54.659361', '2024-05-10', 'HIGH', 'COMPLETED', 1, 1),
+(8, 'Ловить уточек', 'Кря', '2024-03-14 00:26:41.144210', '2024-07-24 18:57:35.374926', '2024-02-28', 'NORMAL', 'COMPLETED', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -61,13 +61,13 @@ INSERT INTO `task` (`id`, `title`, `description`, `createdDate`, `updatedDate`, 
 --
 
 CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
-  `firstName` varchar(255) NOT NULL,
-  `lastName` varchar(255) NOT NULL,
-  `middleName` varchar(255) NOT NULL,
-  `login` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `supervisorId` int(11) DEFAULT NULL
+  `id` int NOT NULL,
+  `firstName` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `lastName` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `middleName` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `login` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `supervisorId` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -110,13 +110,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT для таблицы `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -126,14 +126,14 @@ ALTER TABLE `user`
 -- Ограничения внешнего ключа таблицы `task`
 --
 ALTER TABLE `task`
-  ADD CONSTRAINT `FK_30cb9d78297c1f2a2e07df1a616` FOREIGN KEY (`authorId`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_de1876565f93fd5fae3a73cc8f9` FOREIGN KEY (`executorId`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_30cb9d78297c1f2a2e07df1a616` FOREIGN KEY (`authorId`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `FK_de1876565f93fd5fae3a73cc8f9` FOREIGN KEY (`executorId`) REFERENCES `user` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `FK_5eee61d80509271c4bd366995ec` FOREIGN KEY (`supervisorId`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_5eee61d80509271c4bd366995ec` FOREIGN KEY (`supervisorId`) REFERENCES `user` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
